@@ -60,10 +60,29 @@ void display_list(boost::python::object o) {
 }
 
 
+vector<int> test_vector() {
+    return vector<int>(10, 1234);
+}
+
+
+vector<vector<int> > test_vector2() {
+    return vector<vector<int> >(10, vector<int>(10, 1234));
+}
+
+
 BOOST_PYTHON_MODULE(vector_ops)
 {
     to_python_converter<std::vector<std::string, std::allocator<std::string> >, VecToList<std::string> >();
     def("get_vector", get_vector);
     def("display_strings", display_list<string>);
     def("display_ints", display_list<int>);
+
+    class_<vector<int> >("v_int")
+            .def(boost::python::vector_indexing_suite<vector<int> >())
+    ;
+    class_<vector<vector<int> > >("v_int2")
+            .def(boost::python::vector_indexing_suite<vector<vector<int> > >())
+    ;
+    def("test_vector", test_vector);
+    def("test_vector2", test_vector2);
 }
